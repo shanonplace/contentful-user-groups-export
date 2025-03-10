@@ -19,20 +19,31 @@ This Node.js script fetches all users in your Contentful organization, along wit
 1. Clone or download this repository.
 
 2. Install dependencies:
+
+   ```bash
    npm install
+   ```
 
 3. Create and configure a .env file:
-   - Copy the sample: cp .env.sample .env
+   - Copy the sample:
+   ```bash
+   cp .env.sample .env
+   ```
    - Open .env and add your actual Contentful Management API token and organization ID:
+     ```
      CONTENTFUL_MANAGEMENT_API_TOKEN=YOUR_REAL_TOKEN
      CONTENTFUL_ORGANIZATION_ID=YOUR_ORGANIZATION_ID
+     ```
 
 ---
 
 ## Usage
 
 Run the script:
+
+```bash
 node fetch-contentful-users.js
+```
 
 It will generate a contentful_users.csv file containing columns:
 
