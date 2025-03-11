@@ -57,3 +57,13 @@ userId, email, name, orgRoles, spaceRoles, teams
 - teams: A semicolon-delimited list of teams this user belongs to
 
 Sample output file here: [example_output.csv](example_output.csv)
+
+---
+
+## License
+
+This project is open source and available under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Disclaimer
+
+This script is not officially supported by Contentful. It is a personal project and provided as-is without any warranties or guarantees.
