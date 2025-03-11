@@ -1,7 +1,10 @@
-require("dotenv").config();
-const axios = require("axios");
-const fs = require("fs");
-const { Parser } = require("json2csv");
+import dotenv from "dotenv";
+import axios from "axios";
+import fs from "fs";
+import { Parser } from "json2csv";
+import chalk from "chalk";
+
+dotenv.config();
 
 // ----------------------------------------
 // CONFIG
@@ -146,6 +149,7 @@ function getRoleNames(membership) {
   try {
     const userMap = {};
 
+    console.log(chalk.blue("Fetching organization memberships..."));
     // -----------------------------
     // 1) ORG MEMBERSHIPS
     // -----------------------------
@@ -182,6 +186,7 @@ function getRoleNames(membership) {
       ];
     }
 
+    console.log(chalk.blue("Fetching space memberships..."));
     // -----------------------------
     // 2) SPACE MEMBERSHIPS
     // -----------------------------
@@ -217,6 +222,7 @@ function getRoleNames(membership) {
       ];
     }
 
+    console.log(chalk.blue("Fetching team memberships..."));
     // -----------------------------
     // 3) TEAM MEMBERSHIPS
     // -----------------------------
@@ -237,6 +243,7 @@ function getRoleNames(membership) {
       ];
     }
 
+    console.log(chalk.blue("Generating CSV file..."));
     // -----------------------------
     // Produce final CSV
     // -----------------------------
@@ -255,8 +262,10 @@ function getRoleNames(membership) {
 
     const csv = parser.parse(finalData);
     fs.writeFileSync("contentful_users.csv", csv, "utf8");
-    console.log("Wrote contentful_users.csv with user + role + team data.");
+    console.log(
+      chalk.green("Wrote contentful_users.csv with user + role + team data.")
+    );
   } catch (error) {
-    console.error("Script error:", error);
+    console.error(chalk.red("Script error:"), error);
   }
 })();
