@@ -55,3 +55,5 @@ userId, email, name, orgRoles, spaceRoles, teams
 - orgRoles: A semicolon-delimited list of organization roles (e.g., "Organization Owner; Editor")
 - spaceRoles: A semicolon-delimited list of space roles (e.g., "Admin; Editor")
 - teams: A semicolon-delimited list of teams this user belongs to
+
+Sample output file here: [example_output.csv](example_output.csv)
