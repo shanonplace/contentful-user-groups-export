@@ -3,6 +3,8 @@ import axios from "axios";
 import fs from "fs";
 import { Parser } from "json2csv";
 import chalk from "chalk";
+import cliProgress from "cli-progress";
+import open from "open";
 
 dotenv.config();
 
@@ -150,11 +152,21 @@ function getRoleNames(membership) {
     const userMap = {};
 
     console.log(chalk.blue("Fetching organization memberships..."));
+    const orgProgressBar = new cliProgress.SingleBar(
+      {},
+      cliProgress.Presets.shades_classic
+    );
+    orgProgressBar.start(100, 0);
     // -----------------------------
     // 1) ORG MEMBERSHIPS
     // -----------------------------
     const { allItems: orgItems, allUsers: orgUsers } =
       await fetchOrganizationMemberships();
+    orgProgressBar.update(100);
+    orgProgressBar.stop();
+    console.log(
+      chalk.green(`Fetched ${orgItems.length} organization memberships.`)
+    );
 
     for (const membership of orgItems) {
       const userId = membership.sys?.user?.sys?.id;
@@ -187,11 +199,20 @@ function getRoleNames(membership) {
     }
 
     console.log(chalk.blue("Fetching space memberships..."));
+    const spaceProgressBar = new cliProgress.SingleBar(
+      {},
+      cliProgress.Presets.shades_classic
+    );
+    spaceProgressBar.start(100, 0);
     // -----------------------------
     // 2) SPACE MEMBERSHIPS
     // -----------------------------
     const { allItems: spaceItems, allUsers: spaceUsers } =
       await fetchSpaceMemberships();
+    spaceProgressBar.update(100);
+    spaceProgressBar.stop();
+    console.log(chalk.green(`Fetched ${spaceItems.length} space memberships.`));
+
     for (const membership of spaceItems) {
       const userId = membership.sys?.user?.sys?.id;
       if (!userId) continue;
@@ -223,10 +244,23 @@ function getRoleNames(membership) {
     }
 
     console.log(chalk.blue("Fetching team memberships..."));
+    const teamProgressBar = new cliProgress.SingleBar(
+      {},
+      cliProgress.Presets.shades_classic
+    );
+    teamProgressBar.start(100, 0);
     // -----------------------------
     // 3) TEAM MEMBERSHIPS
     // -----------------------------
     const userToTeams = await fetchTeamMemberships();
+    teamProgressBar.update(100);
+    teamProgressBar.stop();
+    console.log(
+      chalk.green(
+        `Fetched ${Object.keys(userToTeams).length} team memberships.`
+      )
+    );
+
     for (const [userId, teamNames] of Object.entries(userToTeams)) {
       if (!userMap[userId]) {
         userMap[userId] = {
@@ -261,9 +295,15 @@ function getRoleNames(membership) {
     });
 
     const csv = parser.parse(finalData);
-    fs.writeFileSync("contentful_users.csv", csv, "utf8");
+    const outputFilePath = "contentful_users.csv";
+    fs.writeFileSync(outputFilePath, csv, "utf8");
     console.log(
       chalk.green("Wrote contentful_users.csv with user + role + team data.")
+    );
+
+    // Display clickable link in the CLI output
+    console.log(
+      chalk.blue(`Click to open: ${chalk.underline(outputFilePath)}`)
     );
   } catch (error) {
     console.error(chalk.red("Script error:"), error);
